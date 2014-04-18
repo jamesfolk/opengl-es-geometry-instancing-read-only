@@ -89,10 +89,7 @@ void UpdateModelview()
     glGetIntegerv( GL_VIEWPORT, viewport );
     
 	glBindBuffer(GL_ARRAY_BUFFER, modelviewBuffer);
-	GLfloat randVal = 0;
     GLfloat x, y;
-    GLuint x_offset = 12;
-    GLuint y_offset = 13;
     
 	for (int i = 0, offset = 0; i < QUADS_COUNT * VERTS_PER_QUAD; i += 4, offset += 64)
 	{
@@ -101,11 +98,15 @@ void UpdateModelview()
         
         for (int j = 0; j < VERTS_PER_QUAD; j++)
         {
-            int t = (x_offset + (16 * j));
-            modelview[offset + t] = x;
+            GLfloat transform[] =
+            {
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                x, y, 0, 1,
+            };
             
-            t = (y_offset + (16 * j));
-            modelview[offset + t] = y;
+            memcpy(modelview + (offset + (16 * j)), transform, sizeof(GLfloat) * 16);
         }
         
 	}
