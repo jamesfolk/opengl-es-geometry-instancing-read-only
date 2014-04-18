@@ -85,13 +85,14 @@ void SetupData();
 //-------------------------------------------------------------------------------------------
 void UpdateModelview()
 {
+    const GLuint STRIDE = 64;
     GLint viewport[4];
     glGetIntegerv( GL_VIEWPORT, viewport );
     
 	glBindBuffer(GL_ARRAY_BUFFER, modelviewBuffer);
     GLfloat x, y;
     
-	for (int i = 0, offset = 0; i < QUADS_COUNT * VERTS_PER_QUAD; i += 4, offset += 64)
+	for (int i = 0, offset = 0; i < QUADS_COUNT * VERTS_PER_QUAD; i += VERTS_PER_QUAD, offset += STRIDE)
 	{
         x = random() % viewport[2];
         y = random() % viewport[3];
@@ -112,8 +113,6 @@ void UpdateModelview()
 	}
 	
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(modelview), modelview);
-	
-	const GLuint STRIDE = 64;
 	
 	glEnableVertexAttribArray(ATTRIB_MODELVIEW + 0);
 	glEnableVertexAttribArray(ATTRIB_MODELVIEW + 1);
