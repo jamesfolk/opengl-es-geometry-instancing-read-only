@@ -48,9 +48,9 @@ static const GLfloat identityMatrix[] =
 static const GLfloat squareVertices[] = 
 {
 	20.0f, 20.0f,
-	45.0f, 20.0f,
-	20.0f, 45.0f,
-	45.0f, 45.0f,
+	40.0f, 20.0f,
+	20.0f, 40.0f,
+	40.0f, 40.0f,
 };
 
 
@@ -194,15 +194,33 @@ void Render(EAGLView* view)
 	}
 }
 
+static GLuint randomColor()
+{
+    GLuint min = 0;
+    GLuint max = 0xFF;
+    
+    GLuint range = max - min;
+    if (range == 0) return min;
+    
+    return (arc4random() % range) + min;
+}
+static GLuint generateColor()
+{
+    srand (time(NULL));
+    GLuint red = randomColor() << (8 * 3);
+    
+    srand (time(NULL));
+    GLuint green = randomColor() << (8 * 2);
+    
+    srand (time(NULL));
+    GLuint blue = randomColor() << (8 * 1);
+    
+    return red | green | blue | 0xFF;
+}
+
 //-------------------------------------------------------------------------------------------
 void SetupData()
-{  
-	static const GLuint squareColors[] = 
-	{
-		0x00ffffff, 0xff00ffff,
-		0xffff00ff, 0x00ffffff,
-	};
-    
+{
 	static const GLushort squareIndeces[] = {0, 1, 2, 1, 3, 2};
 	GLushort indexes[QUADS_COUNT * 6];
 	GLuint indexDelta = 0;
@@ -221,10 +239,10 @@ void SetupData()
 	const float Y_DELTA = 420.0f / QUADS_COUNT;
 	float vertDelta = Y_DELTA;
 	for (int i = 0; i < QUADS_COUNT * VERTS_PER_QUAD; ++i)
-	{
+	{   
 		data[i].x = squareVertices[j];
 		data[i].y = squareVertices[j + 1] + vertDelta;
-		data[i].color = squareColors[i % 4];
+		data[i].color = generateColor();//squareColors[i % 4];
 		
 		j += 2;
 		if (j == 8)
