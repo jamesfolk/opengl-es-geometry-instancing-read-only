@@ -11,8 +11,10 @@
 
 #define TO_STRING(A) #A
 
-#define QUADS_COUNT 10000
+//#define QUADS_COUNT 10000
+#define QUADS_COUNT 10
 #define VERTS_PER_QUAD 4
+#define INDICES_COUNT 6
 
 #include "Shaders/Shader.fsh"
 #include "Shaders/Shader.vsh"
@@ -91,9 +93,16 @@ void UpdateModelview()
     
 	glBindBuffer(GL_ARRAY_BUFFER, modelviewBuffer);
     GLfloat x, y;
-    
+
+//    viewport[2] = 10;
+//    viewport[3] = 10;
+//    x = random() % viewport[2];
+//    y = random() % viewport[3];
+//    
 	for (int i = 0, offset = 0; i < QUADS_COUNT * VERTS_PER_QUAD; i += VERTS_PER_QUAD, offset += STRIDE)
 	{
+        viewport[2] = 10;
+        viewport[3] = 10;
         x = random() % viewport[2];
         y = random() % viewport[3];
         
@@ -160,25 +169,26 @@ void Render(EAGLView* view)
 	glUseProgram(program);
 		
 	glUniformMatrix4fv(uniforms[UNIFORM_PROJECTION], 1, 0, projection);
-	
-	
+    
 	UpdateModelview();
 	
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    
-	const GLuint STRIDE = sizeof(data[0]);
-	
-	glVertexAttribPointer(ATTRIB_POSITION, 2, GL_FLOAT, 0, STRIDE, NULL);
-	glEnableVertexAttribArray(ATTRIB_POSITION);
-	glVertexAttribPointer(ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, 1, STRIDE, (GLvoid*)8);
-	glEnableVertexAttribArray(ATTRIB_COLOR);
-	
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-	glDrawElements(GL_TRIANGLES, QUADS_COUNT * 6, GL_UNSIGNED_SHORT, 0);
+    
+	glDrawElements(GL_TRIANGLES, QUADS_COUNT * INDICES_COUNT, GL_UNSIGNED_SHORT, 0);
 	
-	[view presentFramebuffer];
 	
-	glFinish();
+	
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    
+    
+    glUseProgram(0);
+    
+    
+    [view presentFramebuffer];
+    
+//	glFinish();
 	
 	endTime = GetCurrentTime();
 	
@@ -222,16 +232,15 @@ static GLuint generateColor()
 void SetupData()
 {
 	static const GLushort squareIndeces[] = {0, 1, 2, 1, 3, 2};
-	GLushort indexes[QUADS_COUNT * 6];
+    
+	GLushort indexes[QUADS_COUNT * INDICES_COUNT];
 	GLuint indexDelta = 0;
-	for (int i = 0; i < QUADS_COUNT * 6; i += 6)
+	for (int i = 0; i < QUADS_COUNT * INDICES_COUNT; i += INDICES_COUNT)
 	{
-		indexes[i + 0] = squareIndeces[0] + indexDelta;
-		indexes[i + 1] = squareIndeces[1] + indexDelta;
-		indexes[i + 2] = squareIndeces[2] + indexDelta;
-		indexes[i + 3] = squareIndeces[3] + indexDelta;
-		indexes[i + 4] = squareIndeces[4] + indexDelta;
-		indexes[i + 5] = squareIndeces[5] + indexDelta;
+        for(int j = 0; j < INDICES_COUNT; ++j)
+        {
+                indexes[i + j] = squareIndeces[j] + indexDelta;
+        }
 		indexDelta += VERTS_PER_QUAD;
 	}
     
@@ -255,12 +264,22 @@ void SetupData()
 	glGenBuffers(1, &vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
+    
+    const GLuint STRIDE = sizeof(data[0]);
+	
+	glVertexAttribPointer(ATTRIB_POSITION, 2, GL_FLOAT, 0, STRIDE, NULL);
+	glEnableVertexAttribArray(ATTRIB_POSITION);
+	glVertexAttribPointer(ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, 1, STRIDE, (GLvoid*)8);
+	glEnableVertexAttribArray(ATTRIB_COLOR);
 	
 	for (int i = 0; i < QUADS_COUNT * VERTS_PER_QUAD * 16; i += 16)
 	{
 		memcpy(&modelview[i], identityMatrix, sizeof(identityMatrix));
 	}
 	
+    size_t s = sizeof(modelview);
+    size_t s2 = QUADS_COUNT * VERTS_PER_QUAD * 16 * sizeof(GLfloat);
+    
 	glGenBuffers(1, &modelviewBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, modelviewBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(modelview), modelview, GL_STREAM_DRAW);
@@ -332,7 +351,9 @@ bool LoadShader()
         glDeleteShader(vertShader);
     if (fragShader)
         glDeleteShader(fragShader);
-	
+    
+	glUseProgram(0);
+    
     SetupData();
     
     return true;

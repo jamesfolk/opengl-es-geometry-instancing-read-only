@@ -5,34 +5,34 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>3169611B-49CA-4712-9FF9-D3E32E5C9614</string>
+	<string>003F8D0B-8398-438A-9E40-38CF85AD5DAD</string>
 	<key>IDESourceControlProjectName</key>
 	<string>testapp</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>E8AB1C0F-08D3-4487-9B4B-4C807117199D</key>
-		<string>https://bitbucket.org/james_folk/geometry-instancing.git</string>
+		<key>7ABC8273-B5DC-4290-B36D-C655784470F3</key>
+		<string>https://github.com/jamesfolk/opengl-es-geometry-instancing-read-only.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>testapp/testapp.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>E8AB1C0F-08D3-4487-9B4B-4C807117199D</key>
+		<key>7ABC8273-B5DC-4290-B36D-C655784470F3</key>
 		<string>../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://bitbucket.org/james_folk/geometry-instancing.git</string>
+	<string>https://github.com/jamesfolk/opengl-es-geometry-instancing-read-only.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>E8AB1C0F-08D3-4487-9B4B-4C807117199D</string>
+	<string>7ABC8273-B5DC-4290-B36D-C655784470F3</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>E8AB1C0F-08D3-4487-9B4B-4C807117199D</string>
+			<string>7ABC8273-B5DC-4290-B36D-C655784470F3</string>
 			<key>IDESourceControlWCCName</key>
 			<string>opengl-es-geometry-instancing-read-only</string>
 		</dict>
